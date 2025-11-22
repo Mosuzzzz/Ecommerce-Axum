@@ -265,7 +265,7 @@ This project is licensed under the MIT License.
 
 ## 👥 Authors
 
-- Your Name - Initial work
+- Mosu- Initial work
 
 ## 🙏 Acknowledgments
 
@@ -276,7 +276,7 @@ This project is licensed under the MIT License.
 
 ## 📞 Support
 
-For support, email your-email@example.com or open an issue in the repository.
+For support, email devpatiphan@gmail.com or open an issue in the repository.
 
 ---
 
