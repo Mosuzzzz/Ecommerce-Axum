@@ -1,0 +1,150 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Back Button -->
+    <button routerLink="/products" class="mb-6 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      <span class="font-medium">กลับไปหน้าสินค้า</span>
+    </button>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-20">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+        <p class="mt-4 text-gray-600 font-medium">กำลังโหลด...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="text-center py-20">
+      <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-8 max-w-md mx-auto">
+        <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-xl font-bold text-red-800 mb-2">{{ error }}</h3>
+        <button routerLink="/products" class="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
+          กลับไปหน้าสินค้า
+        </button>
+      </div>
+    </div>
+
+    <!-- Product Detail -->
+    <div *ngIf="product && !loading" class="animate-fade-in">
+      <!-- Success Message -->
+      <div *ngIf="addedToCart" class="mb-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl p-4 shadow-lg animate-fade-in">
+        <div class="flex items-center gap-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <p class="font-semibold">เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว!</p>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl shadow-strong overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 lg:p-10">
+          
+          <!-- Product Image -->
+          <div class="space-y-4">
+            <div class="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+              <img [src]="product.image_url" [alt]="product.name" 
+                   class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+              <div class="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                ⭐ 4.9
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="flex flex-col justify-between">
+            <div>
+              <!-- Title -->
+              <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+              
+              <!-- Price -->
+              <div class="mb-6">
+                <div class="flex items-baseline gap-3">
+                  <span class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    ${{ product.price }}
+                  </span>
+                  <span class="text-gray-500 line-through text-xl">${{ (product.price * 1.3).toFixed(2) }}</span>
+                  <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">-23%</span>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">รายละเอียดสินค้า</h3>
+                <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+              </div>
+
+              <!-- Features -->
+              <div class="mb-6 grid grid-cols-2 gap-3">
+                <div class="flex items-center gap-2 text-sm text-gray-600">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>จัดส่งฟรี</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-600">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>รับประกัน 1 ปี</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-600">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>ของแท้ 100%</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-600">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>คืนสินค้าได้ 7 วัน</span>
+                </div>
+              </div>
+
+              <!-- Quantity Selector -->
+              <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-900 mb-3">จำนวน</label>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center border-2 border-gray-300 rounded-xl overflow-hidden">
+                    <button (click)="decreaseQuantity()" 
+                            class="px-5 py-3 bg-gray-100 hover:bg-gray-200 transition font-bold text-gray-700">
+                      −
+                    </button>
+                    <span class="px-8 py-3 font-bold text-lg">{{ quantity }}</span>
+                    <button (click)="increaseQuantity()" 
+                            class="px-5 py-3 bg-gray-100 hover:bg-gray-200 transition font-bold text-gray-700">
+                      +
+                    </button>
+                  </div>
+                  <span class="text-sm text-gray-500">มีสินค้าพร้อมส่ง</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+              <button (click)="addToCart()" 
+                      class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                เพิ่มลงตะกร้า
+              </button>
+              
+              <button (click)="buyNow()" 
+                      class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+                ซื้อเลย
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

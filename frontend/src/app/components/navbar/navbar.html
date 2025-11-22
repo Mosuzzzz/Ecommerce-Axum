@@ -1,0 +1,70 @@
+<nav class="sticky top-0 z-50 bg-white shadow-md p-4 flex justify-between items-center">
+  <div class="text-xl font-bold">E-Shop</div>
+  <ul class="flex gap-4 items-center">
+    <li><a routerLink="/" class="hover:text-red-500">{{ t('nav.home') }}</a></li>
+    <li><a routerLink="/products" class="hover:text-red-500">{{ t('nav.products') }}</a></li>
+    
+    <!-- Cart Icon with Badge -->
+    <li>
+      <button (click)="openCart()" class="relative hover:text-red-500 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+        <span *ngIf="cartCount > 0" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          {{ cartCount }}
+        </span>
+      </button>
+    </li>
+    
+    <!-- Language Switcher -->
+    <li class="flex gap-1 border border-gray-300 rounded overflow-hidden">
+      <button 
+        (click)="switchLanguage('th')"
+        [class.bg-blue-600]="langService.currentLanguage === 'th'"
+        [class.text-white]="langService.currentLanguage === 'th'"
+        [class.bg-white]="langService.currentLanguage !== 'th'"
+        [class.text-gray-700]="langService.currentLanguage !== 'th'"
+        class="px-3 py-1 text-sm font-medium transition">
+        TH
+      </button>
+      <button 
+        (click)="switchLanguage('en')"
+        [class.bg-blue-600]="langService.currentLanguage === 'en'"
+        [class.text-white]="langService.currentLanguage === 'en'"
+        [class.bg-white]="langService.currentLanguage !== 'en'"
+        [class.text-gray-700]="langService.currentLanguage !== 'en'"
+        class="px-3 py-1 text-sm font-medium transition">
+        EN
+      </button>
+    </li>
+    
+    <!-- Orders (for logged in users) -->
+    <li *ngIf="authService.isLoggedIn && !authService.isAdmin">
+      <a routerLink="/orders" class="hover:text-blue-500">{{ t('nav.orders') }}</a>
+    </li>
+    
+    <!-- Admin Section -->
+    <li *ngIf="authService.isAdmin">
+      <a routerLink="/admin" class="hover:text-blue-500 font-semibold">{{ t('nav.admin') }}</a>
+    </li>
+    
+    <!-- Auth Buttons -->
+    <li *ngIf="!authService.isLoggedIn">
+      <a routerLink="/login" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        {{ t('nav.login') }}
+      </a>
+    </li>
+    
+    <li *ngIf="authService.isLoggedIn" class="flex items-center gap-3">
+      <span class="text-sm text-gray-600">
+        👤 {{ authService.currentUserValue?.username }}
+      </span>
+      <button 
+        (click)="logout()"
+        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm">
+        {{ t('nav.logout') }}
+      </button>
+    </li>
+  </ul>
+</nav>
+

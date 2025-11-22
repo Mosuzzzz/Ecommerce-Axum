@@ -1,0 +1,186 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">{{ t('admin.title') }}</h1>
+      <p class="text-gray-600 mt-2">{{ t('admin.subtitle') }}</p>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <p class="text-green-800">{{ successMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error && !loading" class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-red-800">{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Add Product Button -->
+    <div class="mb-6">
+      <button 
+        (click)="toggleForm()"
+        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+        <svg *ngIf="!showForm" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <svg *ngIf="showForm" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        {{ showForm ? t('admin.cancel') : t('admin.addProduct') }}
+      </button>
+    </div>
+
+    <!-- Add Product Form -->
+    <div *ngIf="showForm" class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">{{ t('admin.addNewProduct') }}</h2>
+      <form (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Product Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.productName') }} {{ t('admin.required') }}</label>
+            <input 
+              type="text" 
+              [(ngModel)]="newProduct.name"
+              name="name"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Wireless Headphones">
+          </div>
+
+          <!-- Price -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.price') }} {{ t('admin.required') }}</label>
+            <input 
+              type="number" 
+              [(ngModel)]="newProduct.price"
+              name="price"
+              required
+              min="0"
+              step="0.01"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="99.99">
+          </div>
+
+          <!-- Description -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.description') }} {{ t('admin.required') }}</label>
+            <textarea 
+              [(ngModel)]="newProduct.description"
+              name="description"
+              required
+              rows="3"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              [placeholder]="t('admin.description')"></textarea>
+          </div>
+
+          <!-- Image URL -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.imageUrl') }} {{ t('admin.required') }}</label>
+            <input 
+              type="url" 
+              [(ngModel)]="newProduct.image_url"
+              name="image_url"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="https://images.unsplash.com/...">
+            <p class="text-xs text-gray-500 mt-1">{{ t('admin.imageUrlHint') }}</p>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-6 flex gap-3">
+          <button 
+            type="submit"
+            [disabled]="loading"
+            class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed">
+            {{ loading ? t('admin.saving') : t('admin.saveProduct') }}
+          </button>
+          <button 
+            type="button"
+            (click)="toggleForm()"
+            class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
+            {{ t('admin.cancel') }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products List -->
+    <div class="bg-white rounded-lg shadow-md">
+      <div class="p-6 border-b border-gray-200">
+        <h2 class="text-xl font-semibold">{{ t('admin.allProducts') }} ({{ products.length }} {{ t('admin.productsCount') }})</h2>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading && products.length === 0" class="p-12 text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <p class="mt-4 text-gray-600">{{ t('products.loading') }}</p>
+      </div>
+
+      <!-- Products Table -->
+      <div *ngIf="!loading || products.length > 0" class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('admin.image') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('admin.productNameCol') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('admin.descriptionCol') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('admin.priceCol') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('admin.idCol') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('admin.manageCol') }}</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let product of products" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <img [src]="product.image_url" [alt]="product.name" class="h-16 w-16 object-cover rounded">
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-500 max-w-xs truncate">{{ product.description }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-semibold text-gray-900">${{ product.price }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-500">#{{ product.id }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <button 
+                  (click)="deleteProduct(product)"
+                  [disabled]="loading"
+                  class="text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed transition">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && products.length === 0" class="p-12 text-center">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+        </svg>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">{{ t('admin.noProducts') }}</h3>
+        <p class="text-gray-500">{{ t('admin.noProductsDesc') }}</p>
+      </div>
+    </div>
+  </div>
+</div>
