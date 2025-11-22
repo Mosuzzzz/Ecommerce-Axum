@@ -1,0 +1,44 @@
+# Rust / Cargo
+
+# Build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo lock file (uncomment if building a library)
+# Cargo.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Diesel
+diesel.toml.bak
+
+# Test coverage
+tarpaulin-report.html
+cobertura.xml
+
+# Backup files
+*~
+*.bak
+*.backup
