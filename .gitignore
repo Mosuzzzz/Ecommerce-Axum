@@ -4,6 +4,7 @@
 .env
 .env.local
 .env.*.local
+*.env
 
 # IDE and Editor files
 .vscode/
@@ -11,14 +12,6 @@
 *.swp
 *.swo
 *~
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # OS files
 .DS_Store
@@ -29,11 +22,54 @@ yarn-error.log*
 ehthumbs.db
 Thumbs.db
 
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+target/
+*.local
+
 # Temporary files
 *.tmp
 *.temp
 .cache/
+*.pid
+*.seed
+*.pid.lock
 
-# Build outputs (covered by subdirectory .gitignore files)
-# Frontend build outputs are in frontend/.gitignore
-# Backend build outputs are in backend/.gitignore
+# Test coverage
+coverage/
+*.lcov
+.nyc_output
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Lock files (optional - uncomment if you want to ignore)
+# package-lock.json
+# yarn.lock
+# Cargo.lock
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+*~
