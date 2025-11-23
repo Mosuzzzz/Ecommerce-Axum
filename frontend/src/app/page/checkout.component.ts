@@ -43,6 +43,13 @@ export class Checkout implements OnInit {
       return;
     }
 
+    // Load saved address if available
+    const savedAddress = this.authService.getUserAddress();
+    if (savedAddress) {
+      this.shippingInfo = { ...savedAddress };
+      console.log('Loaded saved address');
+    }
+
     // Load cart
     this.cartService.getCartItems().subscribe(items => {
       this.cartItems = items;
@@ -81,6 +88,9 @@ export class Checkout implements OnInit {
 
     this.loading = true;
 
+    // Save address for future use
+    this.authService.saveUserAddress(this.shippingInfo);
+
     // Create order
     setTimeout(() => {
       const userId = this.authService.currentUserValue?.id || '';
@@ -95,6 +105,20 @@ export class Checkout implements OnInit {
       
       this.cdr.detectChanges();
     }, 1000);
+  }
+
+  clearSavedAddress() {
+    if (confirm('คุณต้องการลบที่อยู่ที่บันทึกไว้หรือไม่?')) {
+      this.authService.clearUserAddress();
+      this.shippingInfo = {
+        fullName: '',
+        address: '',
+        city: '',
+        postalCode: '',
+        phone: ''
+      };
+      this.cdr.detectChanges();
+    }
   }
 
   private isValidPhone(phone: string): boolean {

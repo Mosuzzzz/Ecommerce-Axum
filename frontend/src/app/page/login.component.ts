@@ -3,6 +3,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class Login implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private cartService: CartService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -55,6 +57,12 @@ export class Login implements OnInit {
       const success = this.authService.login(this.username, this.password);
       
       if (success) {
+        // Load user's cart after successful login
+        const user = this.authService.currentUserValue;
+        if (user) {
+          this.cartService.setUserId(user.id);
+        }
+
         // Redirect based on role
         if (this.authService.isAdmin) {
           this.router.navigate(['/admin']);

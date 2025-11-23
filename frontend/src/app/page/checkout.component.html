@@ -47,7 +47,22 @@
         <!-- Shipping Form -->
         <div class="lg:col-span-2">
           <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold mb-6">ข้อมูลการจัดส่ง</h2>
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-semibold">ข้อมูลการจัดส่ง</h2>
+              <button 
+                *ngIf="shippingInfo.fullName"
+                type="button"
+                (click)="clearSavedAddress()"
+                class="text-sm text-red-600 hover:text-red-800 transition">
+                ลบที่อยู่ที่บันทึก
+              </button>
+            </div>
+
+            <div *ngIf="shippingInfo.fullName" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p class="text-sm text-blue-800">
+                ✓ ใช้ที่อยู่ที่บันทึกไว้ (คุณสามารถแก้ไขได้)
+              </p>
+            </div>
             
             <form (ngSubmit)="onSubmit()">
               <div class="space-y-4">

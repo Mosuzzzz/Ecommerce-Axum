@@ -25,13 +25,20 @@ export class Navbar implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Subscribe to cart count
     this.cartService.getCartCount().subscribe(count => {
       this.cartCount = count;
+    });
+
+    // Subscribe to user changes to update cart
+    this.authService.currentUser.subscribe(user => {
+      this.cartService.setUserId(user?.id || null);
     });
   }
 
   logout(): void {
     this.authService.logout();
+    this.cartService.setUserId(null); // Clear cart on logout
     this.router.navigate(['/']);
   }
 

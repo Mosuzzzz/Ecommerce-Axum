@@ -12,9 +12,9 @@ export interface CartItem {
   providedIn: 'root'
 })
 export class CartService {
-  private readonly CART_STORAGE_KEY = 'shopping_cart';
   private cartItemsSubject: BehaviorSubject<CartItem[]>;
   public cartItems$: Observable<CartItem[]>;
+  private currentUserId: string | null = null;
 
   constructor() {
     // Load cart from localStorage on init
@@ -23,9 +23,22 @@ export class CartService {
     this.cartItems$ = this.cartItemsSubject.asObservable();
   }
 
+  // Set current user ID to load their cart
+  setUserId(userId: string | null): void {
+    this.currentUserId = userId;
+    const cart = this.loadCartFromStorage();
+    this.cartItemsSubject.next(cart);
+    console.log(`Cart loaded for user: ${userId || 'guest'}`);
+  }
+
+  private getCartStorageKey(): string {
+    // Each user has their own cart
+    return this.currentUserId ? `cart_${this.currentUserId}` : 'cart_guest';
+  }
+
   private loadCartFromStorage(): CartItem[] {
     try {
-      const cartData = localStorage.getItem(this.CART_STORAGE_KEY);
+      const cartData = localStorage.getItem(this.getCartStorageKey());
       return cartData ? JSON.parse(cartData) : [];
     } catch (error) {
       console.error('Error loading cart from localStorage:', error);
@@ -35,7 +48,7 @@ export class CartService {
 
   private saveCartToStorage(cart: CartItem[]): void {
     try {
-      localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(cart));
+      localStorage.setItem(this.getCartStorageKey(), JSON.stringify(cart));
     } catch (error) {
       console.error('Error saving cart to localStorage:', error);
     }

@@ -6,11 +6,13 @@ A full-stack e-commerce application with Angular frontend and Rust backend, feat
 
 ### Customer Features
 - 🛍️ **Product Browsing** - View all products with images, descriptions, and prices
-- 🛒 **Shopping Cart** - Add/remove items, update quantities, persistent cart storage
+- 🛒 **Shopping Cart** - Add/remove items, update quantities, user-specific cart storage
 - 💳 **Checkout** - Complete order with shipping information
 - 📦 **Order History** - View past orders and order details
 - 🌐 **Multi-language** - Switch between Thai and English
-- 🔐 **User Authentication** - Register and login system
+- 🔐 **User Authentication** - Register and login with JWT tokens
+- 🔄 **Token Refresh** - Automatic token refresh for seamless experience
+- 👤 **User-Specific Cart** - Each user has their own separate shopping cart
 
 ### Admin Features
 - ➕ **Product Management** - Add new products
@@ -155,23 +157,39 @@ The project uses Tailwind CSS for styling. Custom styles are defined in:
 
 ## 🔐 Authentication
 
+### JWT Token System
+The application uses JWT tokens for authentication:
+- **Access Token**: Valid for 1 hour
+- **Refresh Token**: Valid for 7 days
+- Automatic token refresh when access token expires
+- Tokens stored in localStorage
+
 ### Default Users
 The application includes a mock authentication system. Default credentials:
 
 **Admin User:**
 - Username: `admin`
 - Password: `admin123`
+- Cart Key: `cart_admin`
 
-**Regular User:**
-- Username: `user`
-- Password: `user123`
+**Regular User (after registration):**
+- Create your own account via the registration page
+- Each user gets a unique cart: `cart_user_{userId}`
+
+⚠️ **Note**: This is a mock implementation for development. In production, use proper backend JWT generation and validation.
+
+See [AUTH_CART_SYSTEM.md](AUTH_CART_SYSTEM.md) for detailed authentication documentation.
 
 ## 🛒 Shopping Cart
 
-The shopping cart uses localStorage for persistence:
-- Cart data is stored locally in the browser
+The shopping cart is user-specific with localStorage persistence:
+- Each user has their own separate cart (stored as `cart_{userId}`)
+- Guest users have a separate cart (`cart_guest`)
 - Cart persists across page refreshes
+- Cart automatically switches when logging in/out
 - Cart is cleared after successful checkout
+
+See [AUTH_CART_SYSTEM.md](AUTH_CART_SYSTEM.md) for detailed documentation.
 
 ## 📦 Database Schema
 
